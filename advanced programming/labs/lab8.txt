@@ -1,0 +1,22 @@
+Lab 8: twecho2
+
+Write the twecho2 program, which first does the same thing as the twecho from lab2, and then in addition, it walks through the command line arguments backward, this time printing out the capitalized version first.  Here is a sample run:
+
+./twecho2 hello world
+hello HELLO
+world WORLD
+WORLD world
+HELLO hello
+
+The main function is given to you in twecho2.cpp.  The Makefile is also provided for you.  All you have to do is to write the following 2 files,
+duper_upper.h
+duper_upper.cpp
+so that the given Makefile will build the twecho2 program which will produce the desired output without any valgrind error.
+
+Hints and requirements:
+Do NOT modify twecho2.cpp.
+Note that the Makefile is written to invoke clang++ instead of g++.  The clang++ is a new C/C++ compiler which has a better support for the recent C++11 standard.
+Do not write the copy constructor and the copy assignment.  The compiler will then generate them for you, and the generated versions will do the wrong things.  But since main() never invokes them, they are not going to affect the program execution.  This is acceptable for this assignment.
+Actually, the right thing to do is to tell the compiler not to generate the copy constructor & assignment.  If you want to do this, the textbook will tell you how.
+Note that there are many ways to do this assignment.  Feel free to reuse the lab2 code.
+Good luck!

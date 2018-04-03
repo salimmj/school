@@ -1,0 +1,100 @@
+---
+title: "Lab 3"
+author: "Salim M'jahad msm2243"
+date: "February 1, 2018"
+output: pdf_document
+---
+
+# Instructions 
+Before Lab 3 is due, make sure that you upload an RMarkdown file to the canvas page (this should have a .Rmd extension) as well as the PDF (or HTML) output after you have knitted the file (this will have a .pdf extension or .html).  Note that since you have already knitted this file, you should see both a **Lab3_UNI.pdf** and a **Lab3_UNI.Rmd** file in your UN2102 folder.  Click on the **Files** tab to the right to see this.  The files you upload to the Canvas page should be updated with commands you provide to answer each of the questions below.  You can edit this file directly to produce your final solutions.  
+
+# Background: Edgar Anderson's Iris Data
+
+The R data description follows:
+
+This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.
+
+# Goal 
+
+The purpose of this lab is to preform simple filtering tasks, use the function **tapply()** and successfully write a loop.  
+
+# Tasks
+
+1) Run the following code and briefly explain what the two functions are doing. 
+
+```{r}
+## head function
+head(iris)
+```
+
+```{r}
+## names function
+names(iris)
+```
+
+head() shows the first part of the iris dataset
+
+names() returns the names of the variables in our dataset 
+
+2) In one line of code, create a vector named **Versicolor** which contains a 1 if the species is versicolor and contains a 0 otherwise.  Use the function **ifelse()** to accomplish this task.   
+
+```{r}
+#-- R code goes here ----
+Versicolor <- ifelse(iris[,"Species"]=="versicolor", 1, 0)
+print(Versicolor)
+```
+
+3) Based on the vector **Versicolor** defined in Part 2, construct a comparative boxplot of sepal width split by whether of not the species is versicolor.  The code is given below.  Change the main title and y-label of the plot.     
+
+```{r}
+# Don't forget to uncomment the code below 
+boxplot(Sepal.Width~Versicolor,main="comp boxplot of sepal width split by species==versicolor",ylab="sepal width",data=iris)
+```
+
+
+4) Using filtering techniques and the function **mean()**, compute the mean sepal length of only the setosa species.  Write only one line of code to accomplish this task.   
+
+```{r}
+#-- R code goes here ----
+mean(subset(iris, Species=="setosa")$Sepal.Length)
+```
+
+5) Run the following code and briefly explain what the function **tapply()** is accomplishing. 
+
+```{r}
+tapply(iris$Sepal.Length,iris$Species,mean)
+```
+
+This function is separating the Sepal.Length column of iris into the categories present in the Species column. Then, it's applying the function mean on each category seperately.
+
+6) Write a loop that that computes the mean of each quantitative variable split by each iris species.  Store the computed means in a matrix named  **MeanFlowers**.  This matrix should have dimension 4 by 3.  Also display the matrix after you run the loop.  I started the loop below: 
+
+
+```{r}
+# define a matrix of zeros
+MeanFlowers <- matrix(0,nrow=4,ncol=3)
+
+# define a character vector corresponding to the numeric variable names
+measurements <- c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width")
+
+# name the rows and columns of the matrix MeanFlowers 
+rownames(MeanFlowers)  <- measurements
+colnames(MeanFlowers)  <- c("setosa","versicolor","virginica")
+colnames(MeanFlowers) 
+# Loop
+
+for (j in measurements) {
+  tmp <- tapply(iris[[j]],iris$Species,mean)
+  for (i in colnames(MeanFlowers)) {
+    MeanFlowers[j, i] <- tmp[i]
+  }
+} 
+MeanFlowers
+```
+
+
+
+
+
+
+

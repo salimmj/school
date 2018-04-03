@@ -1,0 +1,134 @@
+---
+title: "Lab 5"
+author: "Salim M'jahad msm2243"
+date: "February 15, 2018"
+output: pdf_document
+---
+
+# Part 1
+
+## i. 
+```{r}
+housing = read.csv("NYChousing.csv")
+```
+
+## ii.
+```{r}
+dim(housing)
+```
+The dataframe has 2506 rows and 22 columns
+
+## iii. 
+```{r}
+apply(is.na(housing), 2, sum)
+```
+
+This function applies the function sum on the values in housing that are NA and returns the results in a vector format.
+
+## iv. 
+```{r}
+housing <- subset(housing, !is.na(Value))
+```
+
+
+## v.
+```{r}
+dim(housing)
+```
+
+2454 = 2506 - 52
+
+I removed 52 rows, so yes it agrees.
+
+## vi.
+```{r}
+housing$logValue <- log(housing$Value)
+summary(housing$logValue)
+```
+minimum = 8.41
+median = 13.75
+mean = 13.68
+maximum = 20.47
+
+
+## vii.
+```{r}
+housing$logUnits <- log(housing$UnitCount)
+summary(housing$logUnits)
+```
+
+## viii.
+```{r}
+housing$after1950 <- housing$YearBuilt >= 1950
+summary(housing$after1950)
+```
+
+# Part 2
+
+## i.
+```{r}
+library(ggplot2)
+
+p1 <- ggplot(data = housing) + geom_point(mapping = aes(y = logValue, x = logUnits))
+p1
+```
+
+## ii.
+```{r}
+p2 <- ggplot(data = housing) + geom_point(mapping = aes(y = logValue, x = logUnits, col=after1950)) 
+p2
+```
+
+There is almost a direct linear relationship between the logUnits variable and the logValue variable. The more units there are in a property the larger its value. The covariance seems to be positive.
+
+## iii.
+```{r}
+man <- subset(housing, Borough=="Manhattan")
+brook <- subset(housing, Borough=="Brooklyn")
+a1950 <- subset(housing, after1950 == TRUE)
+b1950 <- subset(housing, after1950 == FALSE)
+
+cov_all <- cov(x=housing$logValue, y=housing$logUnits)
+cov_man <- cov(x=man$logValue, y=man$logUnits)
+cov_brook <- cov(x=brook$logValue, y=brook$logUnits)
+cov_a1950 <- cov(x=a1950$logValue, y=a1950$logUnits)
+cov_b1950 <- cov(x=b1950$logValue, y=b1950$logUnits)
+
+c(cov_all, cov_man, cov_brook, cov_a1950, cov_b1950)
+```
+(i) the whole data: 2.182148
+(ii) just Manhattan: 1.983556
+(iii) just Brooklyn: 2.566733
+(iv) for properties built after 1950: 1.123973
+(v) for properties built before 1950: 1.519853
+
+## iv.
+
+```{r}
+manorbrook <- subset(housing, Borough %in% c("Manhattan", "Brooklyn"))
+p3 <- ggplot(data = manorbrook) + geom_point(mapping = aes(y = logValue, x = logUnits, col =Borough)) 
+p3
+```
+
+## v.
+```{r}
+median(subset(housing, Borough=="Manhattan")$Value, na.rm = TRUE)
+```
+
+## vi.
+
+```{r}
+p4 <- ggplot(data=housing) + geom_boxplot(aes(x=factor(Borough), y=logValue))
+p4
+```
+
+## vii.
+
+```{r}
+X <- split(housing, housing$Borough)
+
+medi <- function(datf) {
+  return(median(datf$Value, na.rm = TRUE))
+}
+sapply(X, medi)
+```

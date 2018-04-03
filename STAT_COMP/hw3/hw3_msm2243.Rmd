@@ -1,0 +1,78 @@
+---
+title: "HW 3"
+author: "Salim M'jahad msm2243"
+date: "February 15, 2018"
+output: pdf_document
+---
+
+# Part 1
+
+## i. 
+```{r}
+nets1718 = readLines("netsschedule.html", warn=FALSE)
+summary(nets1718)
+sum(nchar(nets1718))
+max(nchar(nets1718))
+```
+
+It has 828 lines
+It has 129185 character
+The maximum number of characters in a single line is 9736
+
+## ii.
+
+They are playing Indiana first on Wed, Oct 18
+They are playing Boston last on Wed, Apr 11
+
+## iii. 
+```{r}
+#nets1718[321]
+#nets1718[402]
+```
+
+First game is in line 321
+Last game is in line 402
+
+## iv. 
+```{r}
+index.nets1718 <- grep("[A-Z][a-z]{2}, [A-Z][a-z]{2} [0-9]{1,2}", nets1718)
+length(index.nets1718)
+```
+
+
+## v.
+```{r}
+games.nets1718 <- nets1718[index.nets1718]
+matches <- regexpr("[A-Z][a-z]{2}, [A-Z][a-z]{2} [0-9]{1,2}", games.nets1718)
+dates <- regmatches(games.nets1718, matches)
+head(dates)
+```
+
+## vi.
+```{r}
+matches <- regexpr("[0-9]{1,2}:[0-9]{2} [A-Z]{2}", games.nets1718)
+time <- regmatches(games.nets1718, matches)
+head(time)
+```
+
+
+## vii.
+```{r}
+status <- grepl(">@<", games.nets1718)
+status <- as.integer(!status)
+head(status)
+```
+
+## viii.
+```{r}
+matches <- regexpr(">[a-zA-Z ]+</a></li></ul></td><td>",games.nets1718)
+opponent <- regmatches(games.nets1718, matches)
+opponent <- substring(opponent, 2, nchar(opponent)-23)
+head(opponent)
+```
+
+## ix.
+```{r}
+dafa <- data.frame("DATE"=dates, "TIME"=time, "OPPONENT"=opponent, "HOME"=status)
+head(dafa)
+```

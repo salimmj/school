@@ -1,0 +1,97 @@
+---
+title: "Lab 1"
+author: "Enter Your Name and UNI Here"
+date: "January 18, 2017"
+output: pdf_document
+---
+
+# Instructions 
+Before you leave lab today make sure that you upload an RMarkdown file to the Canvas page (this should have a .Rmd extension) as well as the PDF output (or HTMF) after you have knitted the file (this will have a .pdf or .html extension).  Note that since you have already knitted this file, you should see both a **Lab1_UNI.pdf** and a **Lab1_UNI.Rmd** file in your UN2102 Lab1 folder.  Click on the **Files** tab to the right to see this. The files you upload to the Canvas page should be updated with commands you provide to answer each of the questions below.  You can edit this file directly to produce your final solutions. Please do not waste space by printing the dataset or any vector over, say, length $20$.
+
+# Goals
+
+The goals of this lab are to perform some basic tasks using **R** and **R Markdown**.  The primary goal is to guarantee that every student is successfully knitting a markdown file.  Secondary goals include; (1) uploading a dataset, (2) looking at the **head** of a dataset, (3) investigating the structure of a dataset, (4) assigning variables names, (5) perform a basic subsetting task, and (6) creating a basic scatter plot.  
+
+
+# Background: Strike's Dataset
+
+We consider a dataset on 18 countries over 35 years (compiled by Bruce Western, in the Sociology Department at Harvard University). The measured variables are:
+\begin{itemize}
+\item \texttt{country}, \texttt{year}: country and year of data collection
+\item \texttt{strike.volume}: days on strike per 1000 workers
+\item \texttt{unemployment}: unemployment rate
+\item \texttt{inflation}: inflation rate
+\item \texttt{left.parliament}: leftwing share of the government
+\item \texttt{centralization}: centralization of unions
+\item \texttt{density}: density of unions
+\end{itemize}
+ 
+
+# Tasks
+
+1) Create a folder on your desktop (or wherever) labeled Lab1.  Inside the folder you should have the **Lab1.Rmd** file and the **strikes.csv** dataset. 
+
+2) Uncomment and run the following code. Briefly explain what the two functions are doing. 
+
+```{r}
+#-- R code goes here ----
+strikes <- read.csv("strikes.csv", as.is = TRUE)
+dim(strikes) 
+```
+In the first line, we read data from strikes.csv and assign it to the variable strikes
+In the second line, we check the dimensions of this variable, it's a matrix with 8 columns and 625 rows
+
+3) Look at the first 4 observations of this dataframe using the **head** function.  To investigate the **head** function, run the code **?head**. 
+
+```{r}
+#-- R code goes here ----
+?head
+head(strikes, n = 4)
+```
+
+4) Look at the structure of the **strikes** dataset using the **str** function. 
+
+```{r}
+#-- R code goes here ----
+?str
+str(strikes)
+```
+
+5) Run the following code and briefly describe what the **summary**  function is doing.   
+
+```{r}
+#-- R code goes here ----
+summary(strikes)
+```
+Summary is similar to str, it gives insight on the structure of the data. In this case, we have a matrix with 8 variables, it gives the length and type for string variables and calculates values such as min median mean max... for numerical values.
+
+6) Create a logical vector of length 625 (same number of rows in the strikes dataset) which gives a **TRUE** when the country corresponds to Switzerland and **FALSE** otherwise.  Assign the logical vector as **Switzerland.logical**.  How many cases correspond are measure on Switzerland?     
+
+
+```{r}
+#-- R code goes here ----
+Switzerland.logical <- strikes$country == "Switzerland"
+summary(Switzerland.logical)
+```
+35 cases correspond to Switzerland
+
+7) Create a new sub-dataset (of dataframe) that consists only of the cases corresponding to Switzerland.  Call this dataframe *Switzerland.strikes**. Also display the head of **Switzerland.strikes** and identify how many rows are in this new dataset?  
+
+```{r}
+#-- R code goes here ----
+Switzerland.strikes <- subset(strikes, country == "Switzerland")
+head(Switzerland.strikes)
+str(Switzerland.strikes)
+```
+there are 35
+
+8) Create a time-series plot (or scatter plot) that shows Switzerland's inflation rate as a function of time.  The code is explicitly given below. Change the title of the plot and label the axes appropriately.    
+
+```{r}
+#-- R code goes here ----
+ plot(Switzerland.strikes$year,Switzerland.strikes$inflation,
+      main="Switzerland's inflation rate as a function of time", xlab="Time",ylab="Switzerland's inflation rate",
+      col="blue",type="l")  
+
+```
+

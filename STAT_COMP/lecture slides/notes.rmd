@@ -1,0 +1,231 @@
+---
+title: "Notes"
+author: "Salim M'jahad"
+output: pdf_document
+---
+
+# Types
+## Numeric
+```{r}
+x <- 2
+mode(x)
+```
+```{r}
+typeof(x)
+```
+```{r}
+y <- as.integer(2)
+typeof(x)
+```
+
+## Complex
+```{r}
+z <- 2 + 5i
+mode(z)
+```
+```{r}
+typeof(z)
+```
+
+## Character
+```{r}
+name <- "Something :)"
+typeof(name)
+```
+
+## Boolean
+```{r}
+boolT <- TRUE
+boolF <- F
+typeof(boolT)
+```
+
+## Data Types:
+\newline $\bullet$ Vectors
+\newline $\bullet$ Scalars
+\newline $\bullet$ Matrices
+\newline $\bullet$ Arrays
+\newline $\bullet$ Lists (can have different modes)
+\newline $\bullet$ Dataframes (can have different modes)
+
+
+
+# Functions
+
+## Building Vectors
+```{r}
+5:10
+rep("hello", 5)
+v <- c()
+v[1] <- 6
+v[3] <- 5
+v
+```
+
+## Concatenate
+```{r}
+c(c(1,2), c(3,4,5))
+```
+
+## Matrix
+```{r}
+matrix(1:9,nrow=3, ncol=3)
+matrix(1:9,nrow=3, ncol=3, byrow=T)
+```
+
+```{r}
+lol <- matrix(nrow=2, ncol=3)
+lol[1,2] <- 3
+rbind(lol, c(4:6))
+```
+
+## Help
+
+```{r}
+?str
+??"hilbert matrix" 
+```
+
+## Subsets
+
+```{r}
+tmp <- c(11, 12, 13, 14, 15)
+tmp[2:4]
+tmp[c(1,4)]
+tmp[c(2,5)] <- 3
+tmp
+tmp[-1]
+tmp[-c(1,4)]
+```
+
+
+```{r}
+tmp <- matrix(1:6, nrow=2, ncol=3)
+tmp[,2:3]
+tmp[1,]
+```
+
+## Installing Packages
+```{r}
+#install.packages("ggplot2")
+#install.packages("pixmap")
+```
+
+## Importing Packages
+```{r}
+library("ggplot2")
+library("pixmap")
+```
+
+## Manipulating images as matrices
+```{r}
+bird <- read.pnm("bird.pgm")
+plot(bird)
+```
+
+```{r}
+bird@grey[100:200, 200:300] <- 1
+bird@grey[150:250, 250:350] <- 0
+plot(bird)
+```
+
+## Matrix Operations
+```{r}
+mat1 <- rbind(c(1,2),c(4,3))
+mat2 <- 3*mat1
+mat2 == mat1 + mat1 + mat1
+
+transpose <- t(mat2)
+determinant <- det(mat2)
+inverse <- solve(mat2)
+eigenvals <- eigen(mat2)$val
+eigenvecs <- eigen(mat2)$vec
+svd_D <- svd(mat2)$d
+```
+
+Other functions:
+\newline $\bullet$ length(x) : Length of a vector x
+\newline $\bullet$ sum(x) : Sum of a vector x
+\newline $\bullet$ mean(x) : Arithmetic mean of a vector x
+\newline $\bullet$ quantiles(x) : Sample quantiles of a vector x 
+\newline $\bullet$ max(x) : Maximum of a vector x
+\newline $\bullet$ min(x) : Minimum of a vector x
+\newline $\bullet$ sd(x) : Standard deviation of a vector x
+\newline $\bullet$ var(x) : Variance of a vector x
+\newline $\bullet$ summary(x) : Summary statistics of vector x
+
+## Factors
+
+### Split()
+```{r}
+group <- factor(rep(c("Control","Treatment"),c(3,4)))
+ages <- c(20, 30, 40, 35, 35, 35, 35)
+sex <- c("M", "M", "F", "M", "F", "F", "F")
+split(ages, list(group, sex))
+```
+
+### Table() for Contigency Tables
+```{r}
+table(sex, group)
+```
+
+
+### Plot x=Frost y=Illiteracy from dataset=States
+```{r}
+#plot(Illiteracy ~ Frost, data = states)
+```
+
+
+### Read .txt data
+read.table("stu_data.txt", header=FALSE, as.is=TRUE)
+(you can specificy the seperation like commas with sep= )
+scan() reads anything into a vector with elements separated by whitespace
+
+
+### Alphabetize a list of vectors with each elements represented by a word (names(wordlist))
+```{r}
+alphabetized_list <- function(wordlist) {
+   nms <- names(wordlist) # The names are the words
+   sorted <- sort(nms) # The words, but now in ABC order
+   return(wordlist[sorted]) # Returns the sorted version +}
+}
+```
+
+## Loops
+```{r}
+smtg <- c(1,2,3)
+for (i in smtg) {
+  print(i)
+}
+```
+
+```{r}
+tapply(ages, group, mean)
+```
+
+## Exploratory Data Analysis
+
+\newline 1. Generate questions about your data.
+\newline 2. Search for answers by visualizing, transforming, and modelling your
+data.
+\newline 2. Use what you learn to refine your questions and or generate new questions.
+
+
+
+### Number of Character
+nchar("hello") == 5
+length() number of strings in the object
+
+substr(string, start = , stop = )
+
+strsplit(todo, split = ", ")
+
+paste("cat", "squirrel", "hedgehog", sep = ", ")
+paste(c("cat", "squirrel", "hedgehog"), 1:3)
+
+
+
+
+
+
+

@@ -1,0 +1,218 @@
+---
+title: "UN2102 Lab 8"
+author: "Salim M'jahad"
+date: "03/22/2018"
+output: pdf_document
+---
+
+# Goals and Learning Objectives
+
+The goal of this lab is to investigate the predictability of a few financial objects over time. We begin with an introduction to the **ramdom walk** process and the **autoregressive** model (please see the file **Lab 8 Background** for this information).  In this lab, you will estimate the autoregressive statistical parameter $\phi$ for each year of the SP500 weekly closing prices.  You will then perform the same task using closing prices from the Dow Jones Industrial Average.  To accomplish these tasks, utilize the **Split/Apply/Combine** strategy using functions from the **plyr** or **apply** family.        
+       
+## The Autoregressive Model and Estimation 
+
+
+The famous Autoregressive Lag 1 Model has two statistical parameters.  The first parameter is the autoregressive coefficient $\phi$ and the second is the drift $\mu$.  The autoregressive lag-1 process is given by the formula
+\begin{equation}\label{e:ar1m}
+Y_t=\mu+\phi (Y_{t-1}-\mu)+Z_t, \ \ \ Z_t \overset{iid}\sim N(0,\sigma^2).
+\end{equation}
+The above model can be expressed as
+\[
+Y_t=\mu(1-\phi)+\phi Y_{t-1}+Z_t, \ \ \ Z_t \overset{iid}\sim N(0,\sigma^2).
+\]
+
+To estimate the model parameters we can use common techniques, i.e., least squares.
+
+\begin{equation}\label{e:LS}
+Q(\mu,\phi)=\sum_{t=2}^n\big{(}Y_t-(\mu+\phi (Y_{t-1}-\mu))\big{)}^2.
+\end{equation}
+
+The minimum value of $Q$ is achieved at the least squares estimators $\hat{\mu}$ and $\hat{\phi}$.  
+
+**Interpretation:**  The closer the estimated $\phi$ is to 1 gives an indication on how predictable the time series is. If $\phi$ is exactly 1, then the series is a random walk and hence, is not predictable.  Due to random chance, estimated $\phi$ values will never equal 1.  If $\hat{\phi}$ is very close to 1, then the time series is hard to predict. 
+
+
+
+
+
+\pagebreak
+
+One fun technique to easily estimate $\phi$ is to line the data set up as displayed below. Consider the following table for $n=100$ cases.   
+
+
+\begin{table}[h!]
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+$Y_{t-1}$ & $Y_t$  \\
+\hline
+\hline
+$x_1$ & $x_2$  \\
+$x_2$ &$x_3$ \\
+$x_3$ & $x_4$ \\
+$x_4$ & $x_5$  \\
+$x_5$ & $x_6$  \\
+$\vdots$ & $\vdots$  \\
+$x_{98}$ & $x_{99}$  \\
+$x_{99}$ & $x_{100}$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+The first column of the dataframe is the first $n-1$ cases and the second column are cases 2 through $n$.  After constructing the two columns, you can use ordinary linear regression techniques to estimate $\phi$, i.e., regress $Y_{t}$ on the variable $Y_{t-1}$.  The estimated slope $\hat{\beta}_1$ is thus the estimated AR(1) coefficient $\hat{\phi}$.  Note that this new dataframe only has $n-1$ cases.
+
+# Tasks:
+
+1) Write a function called **phi.hat** that estimates the autoregressive parameter $\phi$.  The input should be a data vector **Y** and the output should be the two estimated parameters $\hat{\mu}$ and $\hat{\phi}$. I recommend using the **lm()** function to complete this task.   
+
+```{r}
+# Gabriel will help students with this in class
+setwd("/Users/salimmjahad/Desktop/STAT_COMP/lab8")
+dji <- read.csv("DJIDaily.csv", as.is = TRUE)
+head(dji)
+library(ggplot2)
+#ggplot(dji)+geom_line(aes(x=c(1:7111), y=Close))
+
+phi.hat <- function(vec) {
+  len <- length(vec)
+  bound <- cbind(vec[1:len-1],vec[2:len])
+  res <- coef(lm(bound[,1] ~ bound[,2]))
+  return(res)
+}
+
+phi.hat(dji$Close)
+```
+
+
+2)  Test the **phi.hat** function on the following simulated AR(1) datasets **Y.t**.  
+
+**AR(1) with phi=.5** 
+```{r}
+set.seed(0)
+Y.t <- NULL
+Y.t[1] <- 0
+phi <- .5
+n <- 100
+for (i in 2:n) {
+  Y.t[i] <- phi*Y.t[i-1]+rnorm(1)
+  
+}
+plot(1:100,Y.t,type="l",main="Time Series Plot: AR(1) Phi=0.05",col="blue",xlab="Time")
+abline(h=0,lty=2)
+
+# AR(1) estimated parameter
+phi.hat(Y.t)
+```
+
+**AR(1) with phi=.90** 
+```{r}
+set.seed(0)
+Y.t <- NULL
+Y.t[1] <- 0
+phi <- .90
+n <- 100
+for (i in 2:n) {
+  Y.t[i] <- phi*Y.t[i-1]+rnorm(1)
+}
+
+plot(1:100,Y.t,type="l",main="Time Series Plot: AR(1) Phi=0.05",col="blue",xlab="Time")
+abline(h=0,lty=2)
+
+# AR(1) estimated parameter
+phi.hat(Y.t)
+```
+
+How well does the function **phi.hat** estimate the AR(1) parameter?  
+
+3)  Test the **phi.hat** function on the following simulated random walk datasets **Y**. 
+
+
+**Coin Flip Random Walk 1** 
+
+```{r}
+set.seed(0)
+trials <- 100
+coins <- ifelse(rbinom(n=trials,size=1,prob=.5)==1,1,-1)
+coins
+Y <- cumsum(coins)
+Y
+plot(1:trials,Y,type="l",col="blue",xlab="Time")
+abline(h=0,lty=2)
+
+# AR(1) estimated parameter
+phi.hat(Y)
+```
+
+**Coin Flip Random Walk 2** 
+
+```{r}
+set.seed(3)
+trials <- 200
+coins <- ifelse(rbinom(n=trials,size=1,prob=.5)==1,1,-1)
+coins
+Y <- cumsum(coins)
+Y
+plot(1:trials,Y,type="l",col="blue",xlab="Time")
+abline(h=0,lty=2)
+
+# AR(1) estimated parameter
+phi.hat(Y)
+```
+
+Comment on the estimated AR(1) parameters, i.e., are they close to 1? 
+
+Both values are pretty close to 1. The first being 0.92491871 and the second 0.95549324 meaning the data is predictable.
+
+4)  Test the **phi.hat** function on the SP500 closing price using all $7111$ time points. 
+
+```{r}
+SP500 <- read.csv("SP500Weekly.csv",as.is=T)
+n <- nrow(SP500)
+n
+plot(1:n,SP500$Close,type="l")
+phi.hat(SP500$Close)
+```
+
+Comment on the estimated AR(1) parameter.  What does this say about the predictability of the time series? 
+
+The estimation is 0.9993393 meaning the time series is very predictable.
+
+# Split/Apply/Combine
+
+5) Use the Split/Apply/Combine strategy to estimate the autoregressive parameter $\phi$ over the years 1990 through 2018 on the SP500 Closing prices. This will result in 29 values.  intervals for each dataset.  To summarize the results, plot the estimated parameters as a function of time.  Also plot a horizontal line 1, which will give some insight on which years were more predictable. **Note** you might have to modify the function **phi.hat**.    
+
+```{r}
+# Solution
+head(SP500)
+phi.hat <- function(dff) {
+  len <- length(dff$Close)
+  bound <- cbind(dff$Close[1:len-1],dff$Close[2:len])
+  res <- coef(lm(bound[,1] ~ bound[,2]))
+  return(res)
+}
+SP500$Year <- matrix(unlist(strsplit(SP500$Date, "-")), nrow=nrow(SP500), byrow=T)[,1]
+library(plyr)
+preds <- ddply(SP500, .(Year), phi.hat)
+colnames(preds) <- c("Year", "Intercept", "Phi")
+preds
+plt <- ggplot()+geom_line(aes(x=c(1:length(preds$Phi)),y=preds$Phi)) 
+plt + geom_hline(aes(yintercept=1, color="red"))
+```
+
+
+x=1 corresponds to Year = 1990 and so one
+
+6) Use the Split/Apply/Combine strategy to estimate the autoregressive parameter $\phi$ over the years 1990 through 2018 using the Dow Jones daily closing price data. To summarize the results, plot the estimated parameters as a function of time.  Also plot a horizontal line 1, which will give some insight on which years were more predictable.       
+
+```{r}
+# Solution
+head(dji)
+dji$Year <- matrix(unlist(strsplit(dji$Date, "-")), nrow=nrow(dji), byrow=T)[,1]
+predsdji <- ddply(dji, .(Year), phi.hat)
+colnames(predsdji) <- c("Year", "Intercept", "Phi")
+
+plt <- ggplot()+geom_line(aes(x=c(1:length(predsdji$Phi)),y=predsdji$Phi)) 
+plt + geom_hline(aes(yintercept=1, color="red"))
+```

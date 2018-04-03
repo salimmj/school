@@ -1,0 +1,178 @@
+##### Problem 1:
+
+public static void printLots(Collection<Integer> L, Collection<Integer> P){
+
+    Iterator<Integer> iP = P.iterator();
+
+    while(iP.hasNext()) {
+        Integer varP = iP.next();
+        Iterator<Integer> iL = L.iterator();
+        int i = 0;
+        while(iL.hasNext()){
+            Integer varL = iL.next();
+            if(i == varP){
+                System.out.println(varL);
+            }
+            i++;
+        }
+    }
+}
+
+
+##### Problem 2:
+
+method() {
+    // we have L1 and L2
+
+    List L3 = new List(); //it can be a linkedlist for example
+
+    Construct ListIterator1
+    Construct ListIterator2
+
+    //iterate through L1
+    while (listIterator1.hasNext()) {
+
+        item1 = listIterator1.next()
+
+        //iterate through L2
+        while (listIterator.hasNext()) {
+
+            item2 = ListIterator2.next()
+
+            if( item1.compareTo(item2) == 0){
+                L3.add(item2)
+            }
+        }
+    }
+
+    return L3;
+}
+
+##### Problem 3:
+
+These routines work as follow. The constructor constructs the two stacks at the same time
+and that is by creating an array and two sizes ome for each stack.
+We have one push, one pop and one size() method for each stack.
+For stack 1 we fill it from the beginning of the array (index 0) while we fill stack 2
+from the end (index n).
+THe idea is, in order to only declare an overflow when the array is completely
+full, we need not allocate a certain space for each stack and thus need to have,
+at all times, the stacks located towards the sides of the array as in:
+[s13][s12][s11][O][O][O][O][O][O][s22][s21]
+Now when we do that, we need to make push and pop such as the first relocate all values
+towards the center by one step then puts the pushed value on the extremity.
+Our pop method removes the first element then relocates all the stack back to the side
+by one step before returning the removed value.
+
+constructor {
+    create array of size n
+    size1 = 0
+    size2 = 0
+}
+
+method push1(AnyType x) {
+    if (array is not empty) {
+        int i = 0;
+        while (i<n) {
+            move array[size-i-2] to array[size-i-1]
+            i--
+        }
+    } else {
+        declare an overflow
+    }
+
+    array[0] = x
+
+    size1++
+}
+
+method push2(AnyType x) {
+    if (array is not empty) {
+        int i = n-1;
+        while (i<n) {
+            move array[n-size+i+2] to array[n-size+i+1]
+            i++
+        }
+    } else {
+        declare an overflow
+    }
+
+    array[n-1] = x
+
+    size2++
+}
+
+method pop1() {
+    x = array[0]
+
+    size = size1()
+
+    int i = 1;
+    while (i < size) {
+        move array[i] to array[i-1]
+        i++
+    }
+
+    empty array[size-1]
+
+    size1--
+
+    return x
+}
+
+method pop2() {
+    x = array[n-1]
+
+    size = size2()
+
+    int i = n-2;
+    while (i > n - size) {
+        move array[i] to array[i+1]
+        i--
+    }
+
+    empty array[n- size + 1]
+
+    size2--
+
+    return x
+}
+
+method size1() {
+    return size1;
+}
+
+method size2() {
+    return size2;
+}
+
+##### Problem 4:
+
+Here are the steps to rearrange the specific given example:
+
+~~ Move 4 to S1
+~~ Move 3 to S1
+~~ Move 1 to back of output track
+~~ Move 8 to S2
+~~ Move 2 to back of output track
+~~ Move 7 to S2
+~~ Move 6 to S2
+~~ Move 9 to S3
+~~ Move 5 to S2
+
+At this point we have :
+
+S1    S2    S3    out
+
+                   [2, 1]
+3      5     9
+4      6
+       7
+       8
+
+now we move in a LIFO fashion S1 to the output, then S2 then S3
+Done!
+
+Example impossible to rearrange in 3 tracks:
+
+[1,8,7,6,5,4,3,2,9]

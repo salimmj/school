@@ -1,0 +1,225 @@
+//***********************
+// written.txt
+// Written by Salim M'jahad on 3/2/17
+// msm2243
+// Written part of the assignement
+//***********************
+
+## 1 ##
+
+Base case:
+  When the height of the binary tree is 0 it has 0 full nodes and 1 leaf node.
+  True
+
+Induction Hypothesis:
+  Assume that for a binary tree with n full nodes, there are m+1 leaves.
+  Let's prove that for a binary tree with m+1 full nodes, there are m+2 leaves.
+
+Proof:
+  Take a tree with m full nodes, we know it has m+1 leaves. Now, there two
+  possibilities for it to have an additional full node. Either one of its
+  nodes has one child, in which case we add a second so that node becomes
+  full and the child we added is a new leaf so it has now m+1 full nodes
+  and m+2 leaves. Or one of its leaves gets two children so it is not a
+  leaf anymore (-1) (it becomes a full node) and the 2 children are now
+  leaves (+2). Thus is this case it is true that it has m+1 full nodes
+  and m+2 leaves.
+
+  Hence PROVED!
+
+
+## 2 ##
+
+# a #
+
+    3
+
+    3
+  /
+ 1
+
+
+    3
+  /   \
+ 1     4
+
+    3
+  /   \
+ 1     4
+        \
+         6
+
+    3
+  /   \
+ 1     4
+        \
+         6
+          \
+           9
+
+    3
+  /   \
+ 1     4
+  \     \
+   2     6
+          \
+           9
+
+    3
+  /   \
+ 1     4
+  \     \
+   2     6
+        / \
+       5   9
+
+    3
+  /   \
+ 1     4
+  \     \
+   2     6
+        / \
+       5   9
+           /
+          7
+
+# b #
+
+    3
+  /   \
+ 1     4
+  \     \
+  (2)    6
+        / \
+       5   9
+           /
+          7
+
+max of the left side tree
+
+
+    2
+  /   \
+ 1     4
+  \     \
+   2     6
+        / \
+       5   9
+           /
+          7
+Replacing root
+
+    2
+  /   \
+ 1     4
+        \
+         6
+        / \
+       5   9
+           /
+          7
+
+
+## 3 ##
+
+    3
+
+    3
+  /
+ 1
+
+
+    3
+  /   \
+ 1     4
+
+    3
+  /   \
+ 1     4
+        \
+         6
+
+    3
+  /   \
+ 1     4
+        \
+         6
+          \
+           9
+
+(rotation)
+
+    3
+  /   \
+ 1     6
+      / \
+     4   9
+
+     3
+  /     \
+ 1       6
+  \     / \
+   2   4   9
+
+     3
+  /     \
+ 1       6
+  \     / \
+   2   4   9
+        \
+         5
+
+     3
+  /     \
+ /       \
+1         6
+ \      /    \
+  2    4      9
+        \    /
+         5  7
+
+
+## 4 ##
+
+In order to prove it, it is sufficient to show that there exists two different
+binary tree that have the same pre-order and post-order traversals.
+
+the following trees are good examples:
+
+    1
+   /
+  2
+
+    1
+     \
+      2
+
+since the traversals for both are:
+
+    * pre-order:  12
+    * post-order: 21
+
+Hence, having only pre and post order traversals is not sufficient to determine
+a tree.
+
+
+
+## 5 ##
+
+public AnyType findMin()
+{
+    if(isEmpty())
+        throw new UnderflowException();
+    return findMin(root).element;
+}
+
+private BinaryNode<AnyType> findMin(BinaryNode<AnyType> t)
+{
+    if (t == null) return null;
+    AnyType minLeft = findMin(t.left);
+    if (minLeft != null)
+        return minLeft;
+    if (!node.deleted)
+        return t;
+    return findMin(node.right);
+}

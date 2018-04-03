@@ -1,0 +1,152 @@
+//***********************
+// written.txt
+// Written by Salim M'jahad on 5/1/17
+// msm2243
+// Solutions to written problems
+//***********************
+
+#### 7.19
+
+SOLUTION IN quicksort.pdf
+
+#### 7.23
+
+Choosing the middle element never makes it unlikely that the quickSort requires quadratic time.
+The middle element can be the maximum in all iterations so the complexity will be quadratic.
+
+#### 7.28 a only
+
+I modified code source form book
+
+private static <AnyType extends Comparable<? super AnyType>>
+    void quicksort( AnyType [ ] a, int left, int right )
+    {
+        if( left + CUTOFF <= right )
+        {
+            AnyType pivot = median3( a, left, right );
+            // Begin partitioning
+            int i = left, j = right - 1, k=i, m = j-1;
+            // last 2 variables count elements on side of pivot which are equal to it
+            for( ; ; )
+            {
+                while( a[ ++i ].compareTo( pivot ) < 0 ) { }
+                while( a[ --j ].compareTo( pivot ) > 0 ) { }
+                if( i < j )
+                    swapReferences( a, i, j );
+                else
+                    break;
+
+
+                // checks if elements at i or j is equal to the pivot
+                if (a[i] == pivot)
+                {
+                    swapReferences( a, i, k );
+                    k++;
+                }
+                if (a[j] == pivot)
+                {
+                    swapReferences( a, j, m );
+                    m--;
+                }
+
+            }
+
+            // group all elements found to be equal to the pivot in the middle
+
+            for (int s = 0, s <k , s++)
+            {
+                swapReferences( a, s, j );
+                j --;
+            }
+            for (int s = right, m < s , s--)
+            {
+                swapReferences( a, s, i );
+                i++;
+            }
+
+            quicksort( a, left, j );
+            quicksort( a, i , right );
+        }
+        else  // Do an insertion sort on the subarray
+            insertionSort( a, left, right );
+    }
+
+#### 9.1
+
+I used the algorithm but didn t have time to write it here's the result
+
+s G D H A B E I F C t
+
+
+#### 9.7
+
+a)
+
+take this example: where an edge going from a to b with weight x is represented as (a,b,x)
+
+let the graph have 3 vertices a, b, c and edges:
+(b,a,1)
+(b,c,2)
+(c,a,-6)
+
+if we start djikstra from b, b will be marked as seen and distances will be added to a and c
+such that a has 1 and c has 2 then it will move to the next smallest unseen node
+which is in this case a and it will be marked as seen. now a has no adjacent
+nodes so it will not update any nodes.
+
+so now, according to djikstra, distances are b(0) a(1) c(2)
+but the shortest path to a is b-c-a because its distance is -4
+
+
+#### 9.38
+
+a)
+we get inputs a, b such that  a: (x1_a,y1_a,z1_a),(x2_a,y2_a,z2_a) and for similarly
+
+-we first find out whether they are unrelated or not
+to do that:
+    -we put z=0 (or just consider only the x and y of vertices)
+    -we check whether in xy a and b intersect.
+    to do that:
+        -first solve for m_a and n_a the system:
+        y1_a= m_a*x1_a + n_a  and  y2_a= m_a*x2_a + n_a
+        -do the same for b (m_b and n_b)
+        now we have an equation for a and another for b in the form
+        y = m_a*x + n_a
+        -we solve for x,y the system of both equations
+        -if a solution exists then they are related
+        -if not then they are not
+(this only works because we have to vertical sticks)
+
+-if a and b are related we look at that solution (x,y):
+    -see in 3d space which z is higher z_a or z_b in that intersection
+    -we determine which stick is above
+    -if z_a is higher than z_b then a is above b
+    -otherwise b is above a
+
+b)
+
+to solve that:
+
+-make a graph of N vertices in which each vertex is one of the sticks
+
+-apply the above algorithm for each pair of sticks
+
+so now, for each pair of sticks a and b we know which one is above or whether
+they are unrelated.
+
+- for each pair a and b:
+    --if a is above b we make a directed edge from a to b
+    --if b is above a we make a directed graph from b to a
+    --if they are unrelated we do nothing
+
+now we just see if we can find a topological order.
+
+-first check for cycles
+a way to do that is trying to start from every vertex and try all possible edges
+recursively and see if we get back to the first vertex.
+
+-if there is a cycle we can not pick all the sticks
+-if not, then we find the topological order (trivial) and that is the order to pick
+up the sticks
+

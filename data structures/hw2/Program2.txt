@@ -1,0 +1,10 @@
+Discussion of the Big-Oh cost of enqueue/ dequeue :
+
+What determines the cost of each enq/deq is not only the size of the queue but
+the previous operation. That is because of the flip() method we call before pop()
+or push() on the 2 stacks. If we had just enqueued then we enqueue again flip()
+will not cost meaningful cost and thus for that enqueue operation it is a O(1).
+Now the worst case is an operation after the opposite because the flip() must
+move all the stacks elements to the other stack to flip the order. Moving the
+elements takes a cost of O(N) where N is the number of elements.
+Hence the worst case of dequeue or enqueue is O(N)

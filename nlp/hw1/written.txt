@@ -1,0 +1,113 @@
+# Problem 1 
+
+## q1 
+
+P(spam) = 3/5
+P(ham) = 2/5
+
+## q2 
+
+We know that P( word | class ) = Count( word , class ) / Count( class )
+
+----------------------------
+ word \ class | spam | ham |
+----------------------------
+buy           | 1/12 | 0   |
+----------------------------
+car           | 1/12 | 1/7 |
+----------------------------
+Nigeria       | 1/6  | 1/7 |
+----------------------------
+profit        | 1/6  | 0   |
+----------------------------
+money         | 1/12 | 1/7 |
+----------------------------
+home          | 1/12 | 1   |
+----------------------------
+bank          | 1/6  | 1/7 |
+----------------------------
+check         | 1/12 | 0   |
+----------------------------
+wire          | 1/12 | 0   |
+----------------------------
+fly           | 0    | 1/7 |
+----------------------------
+
+## q3
+
+We know the formula
+
+label* = arg max_{label} P(label) multiply_{word}(P( word | label ))
+
+	-> Nigeria
+
+	P(spam) * P(Nigeria | spam) = 3/5 * 1/6 = 1/10
+	P(ham)  * P(Nigeria | ham)  = 2/5 * 1/7 = 2/35
+
+	since 2/5 > 1/5 , the label is SPAM 
+
+
+	-> Nigeria home 
+
+	P(spam) * P(Nigeria | spam) * P(home | spam) 
+	= 1/120
+
+	P(ham) * P(Nigeria | ham) * P(home | ham) 
+	= 4/245
+
+	the label is HAM
+
+	-> home bank money
+
+	P(spam) * P(home | spam) * P(bank | spam) * P(money | spam) 
+	= 1/1440
+
+	P(ham) * P(home | ham) * P(bank | ham) * P(money | ham) 
+	= 4/1715
+
+	the label is HAM
+
+
+# Problem 2
+
+P.S. I call the sigma for sum over all sentences of length n S_n()
+
+We know the bi-gram model uses the Markov assumption to get
+
+P(w_1, w_2, ... w_n) = P(w_1 | start) * P(w_2 | w_1) * ... * P(w_n | w_{n-1}) 
+
+n = 1
+
+S_1(P(w_1|start)) = 1 because the sum of all count(start,w_1)/count(start) over w_1 is count(start)/count(start)
+
+So assume it is true for n 
+S_n(P(w_1, w_2, ... w_n)) = 1
+
+Let's prove it is also true for n+1 
+
+we have S_{n+1}(P(w_1, w_2, ... w_{n+1})) = S_n(P(w_1, w_2, ... w_n) * S_1(P(w_{n+1} | w_n)))
+
+since P(w_{n+1} | w_n) = count(w_n, w_{n+1})/count(w_n)
+
+= S_n(P(w_1, w_2, ... w_n) = 1 from hypothesis 
+
+hence proved.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

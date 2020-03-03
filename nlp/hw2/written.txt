@@ -1,0 +1,57 @@
+# Problem 1
+
+## a 
+
+## b 
+
+## c
+
+# Problem 2
+
+## a 
+
+[.GAMMA [.S [.S [.NP [.PRP [.they  ] ] ] ] ] [.S [.VP [.VP [.V [.are  ] ] ] ] [.VP [.NP [.NP [.Adj [.baking  ] ] ] ] [.NP [.NP [.N [.potatoes  ] ] ] ] ] ] ]
+
+Chart[0]
+S0 gamma -> \bullet S  [0, 0] [] dummy start state
+S1 S -> \bullet NP VP  [0, 0] [] predictor
+S2 NP -> \bullet Adj NP  [0, 0] [] predictor
+S3 NP -> \bullet PRP  [0, 0] [] predictor
+S4 NP -> \bullet N  [0, 0] [] predictor
+
+Chart[1]
+S5 PRP -> they \bullet [0, 1] [] scanner
+S6 NP -> PRP \bullet [0, 1] [5] completer
+S7 S -> NP \bullet VP  [0, 1] [6] completer
+S8 VP -> \bullet V NP  [1, 1] [] predictor
+S9 VP -> \bullet Aux V NP  [1, 1] [] predictor
+
+Chart[2]
+S10 V -> are \bullet [1, 2] [] scanner
+S11 Aux -> are \bullet [1, 2] [] scanner
+S12 VP -> V \bullet NP  [1, 2] [10] completer
+S13 VP -> Aux \bullet V NP  [1, 2] [11] completer
+S14 NP -> \bullet Adj NP  [2, 2] [] predictor
+S15 NP -> \bullet PRP  [2, 2] [] predictor
+S16 NP -> \bullet N  [2, 2] [] predictor
+
+Chart[3]
+S17 V -> baking \bullet [2, 3] [] scanner
+S18 Adj -> baking \bullet [2, 3] [] scanner
+S19 VP -> Aux V \bullet NP  [1, 3] [11, 17] completer
+S20 NP -> Adj \bullet NP  [2, 3] [18] completer
+S21 NP -> \bullet Adj NP  [3, 3] [] predictor
+S22 NP -> \bullet PRP  [3, 3] [] predictor
+S23 NP -> \bullet N  [3, 3] [] predictor
+
+Chart[4]
+S24 N -> potatoes \bullet [3, 4] [] scanner
+S25 NP -> N \bullet [3, 4] [24] completer
+S26 VP -> Aux V NP \bullet [1, 4] [11, 17, 25] completer
+S27 NP -> Adj NP \bullet [2, 4] [18, 25] completer
+S28 S -> NP VP \bullet [0, 4] [6, 26] completer
+S29 VP -> V NP \bullet [1, 4] [10, 27] completer
+
+## b 
+
+
